@@ -27,5 +27,5 @@ jobs:
       - name: Run version tracking
         env:
           PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MYTOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: dotnet run --project ./ConsoleApp1.csproj
