@@ -24,7 +24,7 @@ class Program
     {
         // List of GitHub repos in "owner/repo" format
         string ownerName = "suryareddyglb";
-        string token = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
+        string token = Environment.GetEnvironmentVariable("MYTOKEN");
         var repos = new List<string>
         {
             "Life-Cycle-Hook---NgAfterContentChecked",
@@ -105,3 +105,4 @@ class Program
     }
 
 }
+
