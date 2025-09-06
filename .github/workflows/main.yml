@@ -1,15 +1,14 @@
-name: Version Tracking
+name: Run Version Tracking
 
 on:
   push:
     branches:
       - main
-  schedule:
-    - cron: '0 * * * *' # Runs every hour
 
 jobs:
-  run-version-tracking:
+  build-and-run:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,11 +18,14 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install Npgsql
-        run: dotnet add package Npgsql
+      - name: Restore dependencies
+        run: dotnet restore
 
-      - name: Run version tracking script
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Run version tracking
         env:
           PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: dotnet run --project ./ConsoleApp1
+        run: dotnet run --project ./ConsoleApp1.csproj
