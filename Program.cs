@@ -24,7 +24,7 @@ class Program
     {
         // List of GitHub repos in "owner/repo" format
         string ownerName = "suryareddyglb";
-        string token = "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";
+        string token = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
         var repos = new List<string>
         {
             "Life-Cycle-Hook---NgAfterContentChecked",
@@ -97,10 +97,11 @@ class Program
         }
 
         // Insert into PostgreSQL
-        var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=mydb";
+        string connectionString = Environment.GetEnvironmentVariable("PG_CONNECTION_STRING");
         var inserter = new PostgresInserter(connectionString);
         await inserter.InsertDependenciesAsync(collection, filterKeys);
 
         Console.ReadLine();
     }
+
 }
