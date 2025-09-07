@@ -49,3 +49,14 @@ jobs:
           PG_CONNECTION_STRING: Host=localhost;Port=5432;Database=mydb;Username=myuser;Password=mypassword
           MYTOKEN: ${{ secrets.MYTOKEN }}
         run: dotnet run --project ./ConsoleApp1.csproj
+
+      - name: Debug:Show version_tracking table
+        run: |
+          echo "Checking if version_tracking table exists..."
+          PGPASSWORD=mypassword psql \
+            -h localhost -U myuser -d mydb \
+            -c "\dt"
+          echo "Fetching rows from version_tracking..."
+          PGPASSWORD=mypassword psql \
+            -h localhost -U myuser -d mydb \
+            -c "SELECT * FROM version_tracking;"
