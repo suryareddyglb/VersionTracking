@@ -97,14 +97,15 @@ class Program
         }
 
         // Insert into PostgreSQL
-        //string connectionString = Environment.GetEnvironmentVariable("PG_CONNECTION_STRING");
-        //var inserter = new PostgresInserter(connectionString);
-        //await inserter.InsertDependenciesAsync(collection, filterKeys);
+        string connectionString = Environment.GetEnvironmentVariable("PG_CONNECTION_STRING");
+        var inserter = new PostgresInserter(connectionString);
+        await inserter.InsertDependenciesAsync(collection, filterKeys);
 
         Console.ReadLine();
     }
 
 }
+
 
 
 
