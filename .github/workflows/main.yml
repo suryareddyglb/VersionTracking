@@ -24,6 +24,11 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release
 
+      - name: Debug token length
+        run: echo "Token length:${#MYTOKEN}"
+        env:
+          MYTOKEN: ${{ secrets.MYTOKEN }}
+
       - name: Run version tracking
         env:
           PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
