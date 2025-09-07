@@ -11,7 +11,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:15
+        image: postgres:14
         env:
           POSTGRES_USER: myuser
           POSTGRES_PASSWORD: mypassword
@@ -44,19 +44,30 @@ jobs:
         env:
           MYTOKEN: ${{ secrets.MYTOKEN }}
 
-      - name: Run version tracking
-        env:
-          PG_CONNECTION_STRING: Host=localhost;Port=5432;Database=mydb;Username=myuser;Password=mypassword
-          MYTOKEN: ${{ secrets.MYTOKEN }}
-        run: dotnet run --project ./ConsoleApp1.csproj
-
-      - name: Debug:Show version_tracking table
+      - name: Create version_tracking table
         run: |
-          echo "Checking if version_tracking table exists..."
+          echo "Creating version_tracking table if it doesn't exist..."
           PGPASSWORD=mypassword psql \
             -h localhost -U myuser -d mydb \
-            -c "\dt"
-          echo "Fetching rows from version_tracking..."
+            -c "CREATE TABLE IF NOT EXISTS version_tracking (
+                  lob TEXT NOT NULL,
+                  appname TEXT NOT NULL,
+                  packagename TEXT NOT NULL,
+                  version1 TEXT,
+                  version2 TEXT,
+                  version3 TEXT,
+                  PRIMARY KEY (lob, appname, packagename)
+                );"
+
+      - name: Run version tracking
+        env:
+          MYTOKEN: ${{ secrets.MYTOKEN }}
+          PG_CONNECTION_STRING: "Host=localhost;Username=myuser;Password=mypassword;Database=mydb"
+        run: dotnet run --project ./ConsoleApp1.csproj
+
+      - name: Debug:Show inserted data
+        run: |
+          echo "Fetching data from version_tracking table..."
           PGPASSWORD=mypassword psql \
             -h localhost -U myuser -d mydb \
             -c "SELECT * FROM version_tracking;"
