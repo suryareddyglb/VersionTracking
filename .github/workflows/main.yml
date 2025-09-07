@@ -9,6 +9,21 @@ jobs:
   build-and-run:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: myuser
+          POSTGRES_PASSWORD: mypassword
+          POSTGRES_DB: mydb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U myuser -d mydb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -31,6 +46,6 @@ jobs:
 
       - name: Run version tracking
         env:
-          PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
+          PG_CONNECTION_STRING: Host=localhost;Port=5432;Database=mydb;Username=myuser;Password=mypassword
           MYTOKEN: ${{ secrets.MYTOKEN }}
         run: dotnet run --project ./ConsoleApp1.csproj
